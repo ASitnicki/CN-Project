@@ -76,4 +76,84 @@ Plik \textbf{docker-compose.yml} składa się z następujących części:
 \section{Podsumowanie}
 Podczas pracy udało mi się osiągnąć wiedzę na temat korzystania z aplikacji Docker oraz wiedzę z ustawiania podstawowego serwera korzystającego z oprogramowania Nginx. Podczas pracy napotkałem problem z kontenerem \textit{laravel-composer}, który został rozwiązany poprzez ponowne ustawienie pliku \textit{docker-composer.yml}. Pracę można by było wykonać inaczej poprzez użycie innego oprogramowania serwerowego (np. Apache) albo poprzez dodanie dodatkowych serwisów takich jak Node.js albo Redis.
 
+=======
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\title{Sprawozdanie z Projektu \\ Konfiguracja Docker Compose dla Projektu Laravelowego}
+\author{Adrian Sitnicki}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Wstęp}
+Projekt ten miał na celu przygotowanie środowiska developerskiego dla aplikacji opartej na frameworku Laravel przy użyciu technologii Docker. Główne składowe projektu obejmują obraz PHP, serwer baz danych (MySQL), serwer WWW (Nginx), oraz Composer do zarządzania zależnościami PHP. Poniżej przedstawiam krótką prezentację oraz cele projektu.
+
+\section{Instrukcja uruchomienia projektu}
+\subsection{Kroki do uruchomienia projektu}
+Aby uruchomić projekt, postępuj zgodnie z poniższymi krokami:
+\begin{enumerate}
+    \item Zainstaluj aplikację Docker Desktop
+    \item Sklonuj projekt z repozytorium przy użyciu komendy:
+    \begin{verbatim}
+    git clone https://github.com/KarolZygadlo/CN-Project
+    \end{verbatim}
+    \item Otwórz terminal i przejdź do katalogu, w którym znajduje się plik \textit{docker-compose.yml}.
+    \item Zedytuj plik \textit{docker-compose.yml} (Sekcja 3).
+    \item Uruchom projekt przy użyciu komendy:
+    \begin{verbatim}
+    docker-compose up -d
+    \end{verbatim}
+    \item Uruchom stronę pod adresem \textit{http://localhost}.
+\end{enumerate}
+
+\subsection{Dostęp do konsoli PHP}
+Aby uzyskać dostęp do konsoli PHP:
+\begin{enumerate}
+    \item Otwórz terminal.
+    \item Uruchom komendę:
+    \begin{verbatim}
+    docker exec laravel-app bash
+    \end{verbatim}
+\end{enumerate}
+
+\section{Zawartość pliku docker-compose.yml}
+Plik \textbf{docker-compose.yml} składa się z następujących części:
+\begin{enumerate}
+    \item \textbf{version '3'} - Wersja Docker Compose. 
+    \item \textbf{services:} - Lista serwisów:
+    \begin{itemize}
+        \item \textbf{app:} - Serwis zapewniający dostęp do \textbf{PHP}.
+        \item \textbf{image: php:7.4-fpm} - Obraz \textbf{PHP} z wersją \textbf{7.4-fpm}.
+        \item \textbf{container\_name: laravel-app} - Nazwa kontenera. 
+        \item \textbf{volumes: ./laravel:/var/www/html} - Montowanie lokalnego folderu projektu do \textit{/var/www/html}.
+        \item \textbf{working\_dir: /var/www/html} - Ustawienie katalogu roboczego na /var/www/html.
+        \item \textbf{depends\_on: database} - Określa, że usługa \textbf{app} zależy od usługi \textbf{database}.
+        \item \textbf{networks: laravel-network} - Podłączenie do sieci \textit{``laravel-network``}.
+    \end{itemize}  
+    \item \textbf{database:} - Serwis zapewniający dostęp do bazy danych \textbf{(MySQL)}.
+    \begin{itemize}
+        \item \textbf{image: mysql:5.7} - Obraz \textbf{MySQL} z wersją \textbf{5.7}.
+        \item \textbf{enviroment: [...]} - Ustawienia środowiskowe dla bazy danych.
+    \end{itemize}
+    \item \textbf{webserver:} - Serwis zapewniający dostęp do serwera \textbf{(Nginx)}
+    \begin{itemize}
+        \item \textbf{image: nginx:latest} - Obraz najnowszej wersji \textbf{Nginx}.
+        \item \textbf{ports: ``80:80``} - Przekierowanie portu \textit{80} na maszynę hosta.
+    \end{itemize}
+    \item \textbf{composer:} - Serwis zapewniający dostęp do \textbf{Composera}.
+    \begin{itemize}
+        \item \textbf{image: composer:latest} - Obraz najnowszej wersji \textbf{Composera}.
+        \item \textbf{command: install} - Komenda do wykonania w trakcie startu kontenera, w tym przypadku \textit{``install``}.
+    \end{itemize}
+    \item \textbf{networks: laravel-network: driver: bridge} - Definiuje sieć o nazwie \textit{laravel-network} typu \textit{bridge}, która umożliwia komunikację między kontenerami. Ta sieć jest używana przez wszystkie usługi w projekcie.
+\end{enumerate}
+
+\section{Podsumowanie}
+Podczas pracy udało mi się osiągnąć wiedzę na temat korzystania z aplikacji Docker oraz wiedzę z ustawiania podstawowego serwera korzystającego z oprogramowania Nginx. Podczas pracy napotkałem problem z kontenerem \textit{laravel-composer}, który został rozwiązany poprzez ponowne ustawienie pliku \textit{docker-composer.yml}. Pracę można by było wykonać inaczej poprzez użycie innego oprogramowania serwerowego (np. Apache) albo poprzez dodanie dodatkowych serwisów takich jak Node.js albo Redis.
+
+>>>>>>> 78f5c5883fcf8f57142fd20c02e1aef3a8aa76ca
 \end{document}
