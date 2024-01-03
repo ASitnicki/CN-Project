@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  app:
+    image: php:7.4-fpm
+    container_name: laravel-app
+    volumes:
+      - ./laravel:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - database
+    networks:
+      - laravel-network
+
+  database:
+    image: mysql:5.7
+    container_name: laravel-db
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: laravel_password
+    networks:
+      - laravel-network
+
+  webserver:
+    image: nginx:latest
+    container_name: laravel-webserver
+    volumes:
+      - ./laravel:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - laravel-network
+
+  composer:
+    image: composer:latest
+    container_name: laravel-composer
+    volumes:
+      - ./laravel:/var/www/html
+      - ./composer.json:/var/www/html/composer.json
+    working_dir: /var/www/html
+    command: install
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
+
