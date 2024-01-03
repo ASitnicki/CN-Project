@@ -1,0 +1,30 @@
+version: '3'
+services:
+    app:
+        image: php:7.4-fpm
+        volumes:
+            - ./app:/var/www/html
+        links:
+            - database
+        ports:
+            - 8080:80
+        depends_on:
+            - database
+    database:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: laravel
+        ports:
+            - 3306:3306
+    webserver:
+        image: nginx
+        volumes:
+            - ./app:/var/www/html
+        ports:
+            - 80:80
+    composer:
+        image: composer
+        command: install
+        volumes:
+            - ./app:/var/www/html
